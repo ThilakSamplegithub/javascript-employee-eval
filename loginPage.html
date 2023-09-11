@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="login">
+        <div class="navbar">
+            <a class="login" href="./loginPage.html">Login</a><a class="employee" href="#" >Employee Page</a>
+        </div>
+        <form >
+            <input class="email" type="email" required />
+            <input class="pass" type="password" required/>
+            <input type="submit"/>
+        </form>
+    </div>
+</body>
+</html>
+<script>
+    let email
+    document.querySelector(".email").addEventListener("change",(e)=>{
+       console.log(e.target.value)
+       email=e.target.value
+    })
+    let pass
+    document.querySelector(".pass").addEventListener("change",(e)=>{
+        console.log(e.target.value)
+        pass=e.target.value
+    })
+    console.log(email,pass)
+    const form=document.querySelector("form")
+    // console.log(form.addEventListener())
+    form.addEventListener("submit",(e)=>{
+        e.preventDefault()
+        console.log(email,pass)
+    fetch(`https://reqres.in/api/login`,{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({email,password:pass})
+    }).then(res=>res.json())
+    .then(res=>{ return localStorage.setItem("token",res.token)
+})
+    .catch(err=>console.log(err.message))
+    })
+
+    document.querySelector(".employee").addEventListener("click",(e)=>{
+        console.log(localStorage.getItem("token"))
+        if(localStorage.getItem("token")){
+            e.target.setAttribute("href","./employeePage.html")
+        }
+    })
+</script>

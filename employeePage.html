@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <h1>Employees Page</h1>
+        <!-- <div class="container">
+          <h1>Staff Track</h1>
+          <img src="https://i.imgur.com/9xEcfJj.jpg" alt="err"/>
+          <h2>Donald Surgen</h2>
+          <p>Department:Engineering</p>
+          <p>Gender:Female</p>
+          <p>Salary:$57000</p>
+        </div> -->
+    </div>
+</body>
+</html>
+<script>
+    let container=document.querySelector(".container")
+    const renderCard=(data)=>{
+        container.innerHTML=""
+        console.log(data)
+    data?.forEach(({deparment,gender,engineering,id,image,salary,name})=>{
+        let div=document.createElement("div")
+        let heading=document.createElement("h1").textContent="Staff Track"
+     let imag=document.createElement("img")
+     imag.setAttribute("src",image)
+     let head2=document.createElement("h2")
+     head2.textContent=name
+     let deparmentI=document.createElement("p")
+     deparmentI.textContent=deparment
+     let genderSt=document.createElement("p")
+     genderSt.textContent=gender
+     let salaryI=document.createElement("p")
+     salaryI.textContent=salary
+     div.append(heading,imag,head2,deparmentI,genderSt,salaryI)
+     container.append(div)
+    }
+    )
+    }
+    fetch(`https://dbioz2ek0e.execute-api.ap-south-1.amazonaws.com/mockapi/get-employees`)
+    .then(res=>res.json())
+    .then(res=>renderCard(res.data))
+    .catch(err=>console.log(err.message,'is'))
+</script>
+<!-- container.insertAdjacentElement("beforeend",`<div class="container">
+    <h1>Staff Track</h1>
+    <img src="https://i.imgur.com/9xEcfJj.jpg" alt="err"/>
+    <h2>Donald Surgen</h2>
+    <p>Department:Engineering</p>
+    <p>Gender:Female</p>
+    <p>Salary:$57000</p>
+  </div>`) -->
