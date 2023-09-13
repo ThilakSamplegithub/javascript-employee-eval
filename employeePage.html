@@ -1,57 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="employeePage.css" />
     <title>Document</title>
-</head>
-<body>
+  </head>
+  <body>
     <div>
-        <h1>Employees Page</h1>
-        <!-- <div class="container">
-          <h1>Staff Track</h1>
-          <img src="https://i.imgur.com/9xEcfJj.jpg" alt="err"/>
-          <h2>Donald Surgen</h2>
-          <p>Department:Engineering</p>
-          <p>Gender:Female</p>
-          <p>Salary:$57000</p>
-        </div> -->
+      <h1>Employees Page</h1>
+      <select class="sortingSalary">
+        <option value="">Sort</option>
+        <option value="asc">low-to-high</option>
+        <option value="desc">High-to-low</option>
+      </select>
+
+      <select class="filterBydepartment">
+        <option value="">filter</option>
+        <option value="Engineering">Engineering</option>
+        <option value="Marketing">Marketing</option>
+        <option value="Operations">Operations</option>
+        <option value="Finance">Finance</option>
+        <option value="HR">HR</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+      <div class="container"></div>
+      <div class="btn"></div>
     </div>
-</body>
+  </body>
 </html>
 <script>
-    let container=document.querySelector(".container")
-    const renderCard=(data)=>{
-        container.innerHTML=""
-        console.log(data)
-    data?.forEach(({deparment,gender,engineering,id,image,salary,name})=>{
-        let div=document.createElement("div")
-        let heading=document.createElement("h1").textContent="Staff Track"
-     let imag=document.createElement("img")
-     imag.setAttribute("src",image)
-     let head2=document.createElement("h2")
-     head2.textContent=name
-     let deparmentI=document.createElement("p")
-     deparmentI.textContent=deparment
-     let genderSt=document.createElement("p")
-     genderSt.textContent=gender
-     let salaryI=document.createElement("p")
-     salaryI.textContent=salary
-     div.append(heading,imag,head2,deparmentI,genderSt,salaryI)
-     container.append(div)
+  const containerDiv = document.querySelector(".container");
+  const btn = document.querySelector(".btn");
+  const filterBydepartment = document.querySelector(".filterBydepartment");
+  let data;
+  const getButtons = () => {
+    btn.innerHTML = "";
+    console.log(data, "is data inside buttons function");
+    for (let i = 0; i < 17; i++) {
+        const elements = `<button data-id=${i+1}>${i+1}</button>`;
+      btn.insertAdjacentHTML("beforeend", elements)
     }
-    )
-    }
-    fetch(`https://dbioz2ek0e.execute-api.ap-south-1.amazonaws.com/mockapi/get-employees`)
-    .then(res=>res.json())
-    .then(res=>renderCard(res.data))
-    .catch(err=>console.log(err.message,'is'))
-</script>
-<!-- container.insertAdjacentElement("beforeend",`<div class="container">
+  };
+  let defaultData;
+  const sorting = document.querySelector(".sortingSalary");
+  const renderCard = (data) => {
+    containerDiv.innerHTML = "";
+    console.log(data,"inside renderCard");
+    data?.forEach(
+      ({ department, gender, engineering, id, image, salary, name }) => {
+        const element = `<div class="child-container">
     <h1>Staff Track</h1>
-    <img src="https://i.imgur.com/9xEcfJj.jpg" alt="err"/>
-    <h2>Donald Surgen</h2>
-    <p>Department:Engineering</p>
-    <p>Gender:Female</p>
-    <p>Salary:$57000</p>
-  </div>`) -->
+    <img src=${image} alt="err"/>
+    <h2>${name}</h2>
+    <p>Department:${department}</p>
+    <p>Gender:${gender}</p>
+    <p>Salary:$${salary}</p>
+  </div>`;
+        containerDiv.insertAdjacentHTML("beforeend", element);
+      }
+    );
+  };
+  async function getPages(page) {
+    try{
+        let res=await fetch(
+      `https://dbioz2ek0e.execute-api.ap-south-1.amazonaws.com/mockapi/get-employees?page=${page}&limit=6`
+    )
+    let newdata= await res.json()
+    renderCard(newdata.data)
+    data=newdata.data
+    defaultData=[...newdata.data]
+    getButtons(data)
+     return 
+    }catch(err){
+        console.log(err.message)
+    }
+  }
+  getPages((page = 1));
+  
+  sorting.addEventListener("click", (e) => {
+    console.log(e.target.value);
+    console.log(data, "inside sorting function");
+    if (e.target.value === "asc") {
+      data.sort((a, b) => a.salary - b.salary);
+      renderCard(data);
+    } else if (e.target.value === "desc") {
+      data.sort((a, b) => b.salary - a.salary);
+      renderCard(data);
+    }
+  });
+  filterBydepartment.addEventListener("click", (e) => {
+    console.log(e.target.value);
+    console.log(data, "is data inside for filtereing");
+    if (e.target.value === "Engineering") {
+      const filteredData = data.filter((el) => el.department === "engineering");
+      renderCard(filteredData);
+    } else if (e.target.value === "Marketing") {
+      const filteredData = data.filter((el) => el.department === "marketing");
+      renderCard(filteredData);
+    } else if (e.target.value === "Operations") {
+      const filteredData = data.filter((el) => el.department === "operations");
+      renderCard(filteredData);
+    } else if (e.target.value === "Finance") {
+      const filteredData = data.filter((el) => el.department === "finance");
+      renderCard(filteredData);
+    } else if (e.target.value === "HR") {
+      const filteredData = data.filter((el) => el.department === "hr");
+      renderCard(filteredData);
+    } else if(e.target.value==="male"){
+        const filteredData = data.filter((el) => el.gender === "male");
+      renderCard(filteredData);
+    }else if(e.target.value==="female"){
+        const filteredData = data.filter((el) => el.gender === "female");
+      renderCard(filteredData);
+    }else {
+      renderCard(defaultData);
+    }
+  });
+  document.querySelector("#dataset_id").addEventListener("click",(e)=>{
+    console.log(e)
+  })
+</script>
