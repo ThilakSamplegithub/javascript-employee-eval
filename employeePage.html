@@ -35,13 +35,30 @@
   const btn = document.querySelector(".btn");
   const filterBydepartment = document.querySelector(".filterBydepartment");
   let data;
+  let selectButton=null
   const getButtons = () => {
+    getPages(pages=1)
     btn.innerHTML = "";
     console.log(data, "is data inside buttons function");
     for (let i = 0; i < 17; i++) {
-        const elements = `<button data-id=${i+1}>${i+1}</button>`;
+        const elements = `<button type=button data-id=${i+1}>${i+1}</button>`;
       btn.insertAdjacentHTML("beforeend", elements)
     }
+    const butn=document.querySelector('.btn')
+    const button=butn.querySelectorAll("button")
+    const newButtons=Array.from(button)
+    newButtons.forEach((el,i)=>el.addEventListener("click",(e)=>{
+      e.preventDefault()
+      removeStlesOfButtons()
+      console.log(e.target.dataset.id)
+      if(selectButton){
+        selectButton.classList.remove("colorIt")
+      }
+      e.target.classList.add("colorIt")
+      selectButton=e.target
+      getPages(e.target.dataset.id)
+      console.log(selectButton,"is select button")
+    }))
   };
   let defaultData;
   const sorting = document.querySelector(".sortingSalary");
@@ -71,13 +88,15 @@
     renderCard(newdata.data)
     data=newdata.data
     defaultData=[...newdata.data]
-    getButtons(data)
+    // getButtons(data)
+    const button=document.querySelector(".btn").querySelectorAll("button")
+    console.log(button,"after fetch")
      return 
     }catch(err){
         console.log(err.message)
     }
   }
-  getPages((page = 1));
+  getButtons()
   
   sorting.addEventListener("click", (e) => {
     console.log(e.target.value);
@@ -118,7 +137,12 @@
       renderCard(defaultData);
     }
   });
-  document.querySelector("#dataset_id").addEventListener("click",(e)=>{
-    console.log(e)
-  })
+  const removeStlesOfButtons=()=>{
+    const button=document.querySelector(".btn").querySelectorAll("button")
+    Array.from(button).forEach(el=>{
+      
+    })
+    
+  }
+
 </script>

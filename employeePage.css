@@ -8,3 +8,7 @@
     flex-wrap: wrap;
     justify-content: center;
 }
+.colorIt{
+    /* border:1px solid red; */
+    background-color: green;
+}
